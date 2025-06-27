@@ -1,0 +1,58 @@
+/** **************************************
+* Fonts
+*************************************** */
+@import '@fontsource-variable/public-sans';
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow/700.css';
+@import '@fontsource/barlow/800.css';
+
+@import '@fontsource-variable/open-sans';
+@import '@fontsource-variable/dm-sans';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/nunito-sans';
+
+/** **************************************
+* Plugins
+*************************************** */
+@import './components/scrollbar/styles.css';
+
+/** **************************************
+* Baseline
+*************************************** */
+html,
+body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+#root,
+#root__layout {
+  min-height: 100%;
+  display: block; /* ✅ Let the content stack normally */
+}
+
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+/* Number input spinner fix */
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
