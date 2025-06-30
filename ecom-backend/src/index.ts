@@ -16,7 +16,7 @@ const app = express();
 // ✅ CORS Configuration (Ensure WebSocket connection works)
 const allowedOrigins = [
   "http://localhost:5173", // Your frontend URL
-  "https://hosman-beta.netlify.app"
+  "https://ekcom-frontend.netlify.app"
 ];
 
 app.use(
