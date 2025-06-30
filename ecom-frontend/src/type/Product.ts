@@ -16,13 +16,14 @@ export interface ProductState {
     singleProduct: Product | null
 }
 
+
 export interface CreateProduct {
-    title: string 
-    price: number
-    description: string 
-    categoryId: number 
-    images: string[]
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
 }
+
 
 export interface ProductUpdate {
     id: number

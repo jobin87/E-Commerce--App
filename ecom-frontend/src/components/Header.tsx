@@ -22,7 +22,7 @@ import { ThemeContext } from "../theme/ThemeContext"; // or adjust path
 import { paths } from "src/routes/paths";
 import { useAppDispatch } from "src/store";
 
-const pages = ["Products", "Categories"];
+const pages = ["Products", "Admin"];
 
 const Header = () => {
   const navigate = useNavigate();
@@ -47,8 +47,8 @@ const Header = () => {
     case "Products":
       navigate(paths.dashboard.product.root); // if you're using react-router
       break;
-    case "Categories":
-      navigate(paths.dashboard.product.root);
+    case "Admin":
+      navigate(paths.dashboard.product.addproduct);
       break;
    
     default:

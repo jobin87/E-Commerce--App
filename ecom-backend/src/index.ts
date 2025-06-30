@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import cartRoutes from "./routes/cart";
 import productRoutes from "./routes/product";
+import adminRoutes from "./routes/admin";
 
 dotenv.config({ path: ".env.development" });
 
@@ -14,7 +15,7 @@ const app = express();
 
 // ✅ CORS Configuration (Ensure WebSocket connection works)
 const allowedOrigins = [
-  "http://localhost:5174", // Your frontend URL
+  "http://localhost:5173", // Your frontend URL
   "https://hosman-beta.netlify.app"
 ];
 
@@ -50,6 +51,8 @@ app.use(express.json());
 connectDb();
 app.use("/api/cart/v1/", cartRoutes);
 app.use("/api/product/v1/", productRoutes);
+app.use("/api/admin/v1/", adminRoutes);
+
 
 
 

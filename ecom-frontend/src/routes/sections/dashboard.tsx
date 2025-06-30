@@ -9,6 +9,7 @@ const ProductListPage = lazy(() => import('src/pages/product/product'));
 const CartPage = lazy(() => import('src/pages/product/productcart'));
 const ProductDetailsPage = lazy(() => import('src/pages/product/productdetail'));
 const CheckPage = lazy(() => import('src/pages/product/checkout'));
+const Addproduct = lazy(() => import('src/pages/admin'));
 
 
 // Layout + fallback
@@ -37,6 +38,7 @@ const dashboardRoutes = [
           { path: 'add-cart', element: <CartPage /> },
           {path:'checkout/:id',element:<CheckPage/>},
           { path: 'product-details/:id', element: <ProductDetailsPage /> },
+          {path:'addproduct',element:<Addproduct/>},
         ],
       },
     ],

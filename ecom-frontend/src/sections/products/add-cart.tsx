@@ -24,7 +24,7 @@ export const CartPage = () => {
 
   useEffect(() => {
     console.log("🚀 dispatching getCart()");
-    dispatch(getCart());
+    dispatch(getCart() as any);
   }, [dispatch]);
 
   return (

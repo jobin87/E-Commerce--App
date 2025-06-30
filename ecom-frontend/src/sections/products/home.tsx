@@ -42,14 +42,14 @@ export const HomePage = () => {
 
   useEffect(() => {
     if (!data || data?.products?.length === 0) {
-      dispatch(getProducts());
+      dispatch(getProducts()as any);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddToCart = async (product: productTypes) => {
     try {
-      const response = dispatch(addCart(product));
+      const response = dispatch(addCart(product) as any);
       if (response.payload) {
         toast.success("Product added to cart");
       }

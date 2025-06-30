@@ -31,7 +31,7 @@ export const ProductDetailPage = () => {
 
   useEffect(() => {
     if (!data?.products?.length) {
-      dispatch(getProducts());
+      dispatch(getProducts() as any);
     } else {
       findProductById();
     }
@@ -45,14 +45,14 @@ export const ProductDetailPage = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      dispatch(addCart({ objectID: product.objectID }) as any); // 👈 correct object
+      dispatch(addCart({ objectID: product.objectID }) as any); 
       toast.success("Added to cart!");
     }
   };
 
   const handlebuyNow = () => {
     console.log("product:", product);
-    navigate(paths.dashboard.product.checkout(product.objectID));
+    navigate(paths.dashboard.product.checkout(product!.objectID));
   };
 
   if (loading || !product) {
@@ -85,7 +85,7 @@ export const ProductDetailPage = () => {
             {product.name}
           </Typography>
           <Typography variant="body1" color="text.secondary" gutterBottom>
-            {/* Category: {product.categories?.join(", ")} */}
+            Category: {product.categories?.join(", ")}
           </Typography>
           <Typography variant="h6" color="primary" gutterBottom>
             ₹{product.salePrice}
