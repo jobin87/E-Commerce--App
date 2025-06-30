@@ -12,26 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectdb = exports.connectDb = void 0;
+exports.connectDb = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: ".env.development" });
 const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Connection = yield mongoose_1.default.connect(process.env.MONGO_URI || "");
-        console.log(`MONGO-DB Connected:${Connection.connection.name}`);
+        if (process.env.MONGO_URI === undefined) {
+            throw new Error("URI is not defined");
+        }
+        mongoose_1.default.set("strictQuery", true);
+        // mongoose.set("debug", true);
+        yield mongoose_1.default.connect(process.env.MONGO_URI);
+        console.log("Connected to mongodb");
     }
     catch (error) {
-        console.error(`ERROR:${error.message}`);
-        process.exit(1);
+        console.log(error);
     }
 });
 exports.connectDb = connectDb;
-const connectdb = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-    }
-    catch (error) {
-        console.error(`err${error.message}`);
-    }
-});
-exports.connectdb = connectdb;

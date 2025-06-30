@@ -12,26 +12,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectdb = exports.connectDb = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: ".env.development" });
-const connectDb = () => __awaiter(void 0, void 0, void 0, function* () {
+exports.createProduct = void 0;
+const admin_1 = __importDefault(require("../models/admin"));
+const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Connection = yield mongoose_1.default.connect(process.env.MONGO_URI || "");
-        console.log(`MONGO-DB Connected:${Connection.connection.name}`);
+        const { title, price, description, categoryId } = req.body;
+        if (!title || !price || !description || !categoryId) {
+            res.status(400).json({ message: "All fields are required, including image" });
+            return;
+        }
+        const newProduct = yield admin_1.default.create({
+            title,
+            price,
+            description,
+            categoryId,
+        });
+        res.status(201).json({
+            message: "Product created successfully",
+            product: newProduct,
+        });
+        return;
     }
     catch (error) {
-        console.error(`ERROR:${error.message}`);
-        process.exit(1);
+        console.error("Create product error:", error);
+        res.status(500).json({ message: "Internal server error" });
+        return;
     }
 });
-exports.connectDb = connectDb;
-const connectdb = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-    }
-    catch (error) {
-        console.error(`err${error.message}`);
-    }
-});
-exports.connectdb = connectdb;
+exports.createProduct = createProduct;

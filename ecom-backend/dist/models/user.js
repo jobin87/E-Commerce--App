@@ -1,59 +1,81 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const userSchema = new mongoose_1.default.Schema({
-    userName: {
+const password_service_1 = require("../services/password.service");
+const UserSchema = new mongoose_1.default.Schema({
+    username: {
         type: String,
         required: true,
-        trim: true,
     },
-    userEmail: {
+    email: {
         type: String,
         required: true,
-        trim: true,
-        unique: true, // Prevent duplicate emails
+        index: true,
     },
     password: {
         type: String,
         required: true,
     },
-    userRegNum: {
+    resetToken: {
         type: String,
-        required: true,
+        index: true,
     },
-    department: {
+    resetTokenExpiration: {
+        type: Number,
+        index: true,
+    },
+    gender: {
         type: String,
-        required: true,
-        trim: true,
     },
-    specialization: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    role: {
-        type: String,
-        enum: ['Manager', 'Doctor', 'Nurse'],
-        required: true
-    },
-    zipCode: {
-        type: String,
-        required: true,
-    },
-    isVerified: {
+    isAdmin: {
         type: Boolean,
         default: false,
     },
-    verificationToken: {
-        type: String, // <-- Add this field
+    address: {
+        street: { type: String },
+        houseNumber: { type: Number },
+        zipCode: { type: String },
+        state: { type: String },
+        country: { type: String },
+        phoneNumber: { type: String },
+        additionalInfo: { type: String },
     },
-    photoURL: {
-        type: String,
-        default: "https://i.pinimg.com/736x/3b/33/47/3b3347c6e29f5b364d7b671b6a799943.jpg", // ✅ Default profile image
+    cart: [{ type: mongoose_1.default.Schema.Types.ObjectId }],
+    orders: [{ type: mongoose_1.default.Schema.Types.ObjectId }],
+    wishlist: [{ type: mongoose_1.default.Schema.Types.ObjectId }],
+}, {
+    timestamps: true,
+    toJSON: {
+        transform(doc, ret, options) {
+            delete ret.password;
+            delete ret.__v;
+        },
     },
-}, { timestamps: true });
-const User = mongoose_1.default.model('User', userSchema);
-exports.default = User;
+});
+UserSchema.statics.build = (attrs) => {
+    return new User(attrs);
+};
+UserSchema.pre("save", function (done) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (this.isModified("password")) {
+            const hashed = password_service_1.Password.genPasswordHash(this.get("password"));
+            this.set("password", hashed);
+        }
+        done();
+    });
+});
+const User = mongoose_1.default.model("User", UserSchema);
+exports.User = User;
