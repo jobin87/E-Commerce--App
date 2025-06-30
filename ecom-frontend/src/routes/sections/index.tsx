@@ -3,8 +3,8 @@ import { Navigate, useRoutes } from 'react-router-dom';
 
 import { mainRoutes } from './main';
 import { CONFIG } from 'src/config-global';
-import { dashboardRoutes } from './dashboard';
 import { paths } from '../paths';
+import dashboardRoutes from './dashboard';
 
 // ----------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ export function Router() {
   return useRoutes([
     {
       path: '/',
-      element: <Navigate to={paths.dashboard.reports.root} replace />,
+      element: <Navigate to={paths.dashboard.product.root} replace />,
     },
 
 

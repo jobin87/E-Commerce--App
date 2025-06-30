@@ -1,8 +1,8 @@
 import bull from "bull";
 import { Cart } from "../models/Cart";
-import { User } from "../models/User";
 import { Product } from "../models/Product";
 import { NotFoundError } from "../common/src";
+import { User } from "../models/user";
 
 interface Payload {
   cartId: string;

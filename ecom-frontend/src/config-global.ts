@@ -25,7 +25,7 @@ export const CONFIG: ConfigValue = {
   assetsDir: import.meta.env.VITE_AUTH_ASSETS_DIR ?? '',
   dashboard: {
     skip: false,
-    redirectPath: paths.dashboard.reports.root,
+    redirectPath: paths.dashboard.product.root,
   },
   mapboxApiKey: import.meta.env.VITE_MAPBOX_API_KEY ?? '',
 };

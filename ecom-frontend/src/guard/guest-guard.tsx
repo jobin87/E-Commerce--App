@@ -1,13 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
-
-import { useRouter, useSearchParams } from 'src/routes/hooks';
-
+import { useEffect, useState } from 'react';
+import { useRouter } from 'src/routes/hooks';
 import { CONFIG } from 'src/config-global';
-
 import { SplashScreen } from 'src/components/loading-screen';
-import { useUser } from 'src/hooks/use-user';
-
-// ----------------------------------------------------------------------
 
 type Props = {
   children: React.ReactNode;
@@ -15,29 +9,18 @@ type Props = {
 
 export function GuestGuard({ children }: Props) {
   const router = useRouter();
-
-  const searchParams = useSearchParams();
-
-  const { userLogged, loading } = useUser();
-
-  const [isChecking, setIsChecking] = useState<boolean>(true);
-
-  const returnTo = searchParams.get('returnTo') || CONFIG.auth.redirectPath;
-
-  const checkPermissions = useCallback(async (): Promise<void> => {
-    if (userLogged) {
-      router.replace(returnTo);
-      return;
-    }
-
-    setIsChecking(false);
-  }, [userLogged, returnTo, router]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkPermissions();
-  }, [checkPermissions, loading]);
+    // Fake loading, then allow access
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 500); // optional: simulate loading
 
-  if (isChecking) {
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (loading) {
     return <SplashScreen />;
   }
 

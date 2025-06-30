@@ -1,72 +1,26 @@
-import mongoose from "mongoose";
-import { CartAttrs } from "../types/types";
+``// models/Cart.ts
+import mongoose, { Document, Schema } from "mongoose";
 
-interface CartDoc extends mongoose.Document {
-  jobId?: string;
-  expired: boolean;
-  userId: string;
-  orderId?: string;
-  products: [
-    {
-      productId: string;
-      quantity: number;
-    }
-  ];
+export interface ICartItem extends Document {
+  objectID: string;
+  name: string;
+  image: string;
+  salePrice: number;
+  quantity: number;
+  categories?: string[];
 }
 
-interface CartModel extends mongoose.Model<CartDoc> {
-  build(attrs: CartAttrs): CartDoc;
-}
-
-const CartSchema = new mongoose.Schema(
+const cartSchema = new Schema<ICartItem>(
   {
-    jobId: {
-      type: String,
-      default: null,
-    },
-    expired: {
-      type: Boolean,
-      default: false,
-    },
-    userId: {
-      type: String,
-      required: true,
-      index: true,
-    },
-    orderId: {
-      type: String,
-    },
-    products: [
-      {
-        productId: {
-          type: String,
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    objectID: { type: String, required: true, unique: false }, // prevent duplicates
+    name: { type: String, required: true },
+    image: { type: String, required: true },
+    salePrice: { type: Number, required: true },
+    quantity: { type: Number, required: true, default: 1 },
+    categories: { type: [String] },
   },
-  {
-    timestamps: true,
-    toJSON: {
-  transform(doc, ret) {
-    if (ret.__v !== undefined) {
-      delete ret.__v;
-    }
-    return ret;
-  },
-}
-
-  }
+  { timestamps: true }
 );
 
-CartSchema.statics.build = (attrs: CartAttrs) => {
-  return new Cart(attrs);
-};
-
-const Cart = mongoose.model<CartDoc, CartModel>("Cart", CartSchema);
-
-export { Cart };
+const CartModel = mongoose.model<ICartItem>("Cart", cartSchema);
+export default CartModel;

@@ -11,12 +11,20 @@ export class RequestValidationError extends CustomError {
     Object.setPrototypeOf(this, RequestValidationError.prototype);
   }
 
-  serializeErrors() {
-    return this.errors.map((error) => {
+  serializeErrors(): { message: string; field?: string }[] {
+  return this.errors.map((error) => {
+    if ('param' in error && typeof error.param === 'string') {
       return {
-        message: error.msg,
+        message: String(error.msg),
         field: error.param,
       };
-    });
-  }
+    }
+
+    return {
+      message: String(error.msg),
+      // No 'field' key here — makes it optional
+    };
+  });
+}
+
 }

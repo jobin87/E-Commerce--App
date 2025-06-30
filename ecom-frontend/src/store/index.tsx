@@ -1,6 +1,5 @@
 import type { TypedUseSelectorHook } from 'react-redux';
 
-import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPersistConfig } from 'redux-deep-persist';
 import {
@@ -17,6 +16,7 @@ import storage from 'redux-persist/lib/storage';
 
 import { ignorePathRedux, whiteListRedux } from './config';
 import { rootReducer } from './root-reducer';
+import { configureStore } from '@reduxjs/toolkit';
 
 const middleware: any = [];
 
@@ -31,7 +31,7 @@ const persistedReducer = persistReducer(config, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: (getDefaultMiddleware:any) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
@@ -50,3 +50,5 @@ export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+

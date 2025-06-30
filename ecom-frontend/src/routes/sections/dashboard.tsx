@@ -1,49 +1,46 @@
-import { lazy, Suspense, useMemo } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from 'react-router-dom';
+import { GuestGuard } from 'src/guard';
+import MainLayout from 'src/layout/mainlayout';
+import { Suspense, lazy } from 'react';
+import { LoadingScreen } from 'src/components/loading-screen';
 
-// Roles
-// const StaffRolesList = lazy(() => import('src/pages/dashboard/settings/staff/roles'));
+// Lazy loaded components
+const ProductListPage = lazy(() => import('src/pages/product/product'));
+const CartPage = lazy(() => import('src/pages/product/productcart'));
+const ProductDetailsPage = lazy(() => import('src/pages/product/productdetail'));
+const CheckPage = lazy(() => import('src/pages/product/checkout'));
 
-import { LoadingScreen } from "src/components/loading-screen";
 
-import { DashboardLayout } from "src/layouts/dashboard/layout";
-import ReportEditForm from "src/sections/reports/edit-report";
-import ReportFormPage from "src/sections/reports/report-form";
-import ReportDetailsPage from "src/sections/reports/report-details";
-import { useUser } from "src/hooks/use-user";
-
-// ----------------------------------------------------------------------
-
-const ReportPage = lazy(() => import("src/pages/reports/reports"));
-
-// const GeneralPage = lazy(() => import('src/pages/dashboard/user/general-account'));
-
-// ----------------------------------------------------------------------
-
-// Layout wrapper with a loading fallback
-const LayoutContent = () => (
-  <DashboardLayout>
+// Layout + fallback
+const layoutContent = (
+  <MainLayout>
     <Suspense fallback={<LoadingScreen />}>
       <Outlet />
     </Suspense>
-  </DashboardLayout>
+  </MainLayout>
 );
 
-// Component to determine routes based on role
-export const dashboardRoutes = [
+const dashboardRoutes = [
   {
-    path: "dashboard",
-    element: <LayoutContent/>,
+    path: 'dashboard',
+    element: <GuestGuard>{layoutContent}</GuestGuard>,
     children: [
       {
-        path: "report",
+        index: true,
+        element: <Navigate to="product" replace />, // ✅ This is the key fix
+      },
+      {
+        path: 'product',
+        element: <Outlet />,
         children: [
-          { element: <ReportPage />, index: true },
-          { path: "add-report", element: <ReportFormPage /> },
-          { path: "report-details/:id", element: <ReportDetailsPage /> },
-          { path: "report-edit", element: <ReportEditForm /> },
+          { index: true, element: <ProductListPage /> },
+          { path: 'add-cart', element: <CartPage /> },
+          {path:'checkout/:id',element:<CheckPage/>},
+          { path: 'product-details/:id', element: <ProductDetailsPage /> },
         ],
       },
     ],
   },
 ];
+
+export default dashboardRoutes;

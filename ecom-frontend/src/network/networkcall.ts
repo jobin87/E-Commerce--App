@@ -3,7 +3,6 @@ import toast from 'react-hot-toast';
 
 import { CONFIG } from 'src/config-global';
 import { default as defaultStore, default as store } from 'src/store';
-import { requestSignOut } from 'src/store/app/appThunk';
 
 interface INetworkCallConfig {
   method: string;
@@ -25,14 +24,10 @@ export const API_METHODS = {
 
 export const makeNetworkCall = async (config: INetworkCallConfig) => {
   try {
-    const { app } = defaultStore.getState();
     const { method = API_METHODS.GET, extraHeaders = {}, extraHeadersOnly = false } = config;
-    const authKey = app.auth?.data?.accessToken;
 
     const commonHeaders = {
-      ...(authKey !== undefined && { Authorization: `Bearer ${authKey}` }),
       'Content-Type': 'application/json',
-      withCredentials: false,
     };
 
     const headers = extraHeadersOnly
@@ -49,12 +44,8 @@ export const makeNetworkCall = async (config: INetworkCallConfig) => {
       data: config.data,
       headers,
       validateStatus: () => true,
-      withCredentials: false,
     });
 
-    if (call.status === 401) {
-      store.dispatch(requestSignOut());
-    }
     if (call.status !== 200 && call.status !== 201) {
       toast?.error(call?.data?.data?.message || call?.data?.message || 'Something went wrong');
     }
@@ -64,8 +55,9 @@ export const makeNetworkCall = async (config: INetworkCallConfig) => {
     }
 
     return call;
-  } catch (error:any) {
+  } catch (error: any) {
     toast?.error(error?.response?.data?.message || error?.message || 'Something went wrong');
     return null;
   }
 };
+

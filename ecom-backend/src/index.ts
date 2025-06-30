@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./config/db";
-import authRoutes from "./routes/authRoutes";
 import cors from "cors";
 import http from "http"; // ✅ Import HTTP module
-import { dashboardRoutes } from "./routes/dashboardRoutes";
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
+import cartRoutes from "./routes/cart";
+import productRoutes from "./routes/product";
 
 dotenv.config({ path: ".env.development" });
 
@@ -48,44 +48,10 @@ app.locals.io = io;
 // ✅ Middleware
 app.use(express.json());
 connectDb();
-app.use("/api/auth/v1/", authRoutes);
-app.use("/api/staff/v1/", dashboardRoutes);
+app.use("/api/cart/v1/", cartRoutes);
+app.use("/api/product/v1/", productRoutes);
 
-// ✅ Basic Route
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, WebSocket is working!");
-});
 
-// ✅ WebSocket Connection
-io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
-  });
-});
-
-// ✅ Function to Notify Clients of Updates
-export const notifyDoctorUpdate = () => {
-  io.emit("updateDoctors"); // 🔴 This now correctly uses `io`
-};
-export const notifyTreatmentUpdate = () => {
-  io.emit("updateTreatments");
-};
-
-export const notifyStaffUpdate = () => {
-  io.emit("updateStaff");
-};
-
-export const notifyAppointmentUpdate = () => {
-  io.emit("updateAppointments");
-};
-export const notifyPatientUpdate = () => {
-  io.emit("updatePatients");
-};
-export const notifyReportsUpdate = () => {
-  io.emit("updateReports");
-};
 
 // ✅ Start the server (IMPORTANT: Use `server.listen`)
 const PORT = process.env.PORT || 5001; // ✅ Make sure this matches your frontend WebSocket connection

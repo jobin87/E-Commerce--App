@@ -1,81 +1,49 @@
-import mongoose from "mongoose";
-import { FlashSale, ProductAttrs } from "../types/types";
+import mongoose, { Document, Schema, Model } from "mongoose";
 
-export interface ProductDoc extends mongoose.Document {
-  _id: string;
-  available: boolean;
-  totalSales: number;
-  title: string;
-  img: string;
-  description: string;
-  category: string;
-  sizes: Array<string>;
-  gender: string;
-  color: Array<string>;
-  inStock: number;
-  price: string;
-  avaliableQuantity: number;
-  flashSale: FlashSale;
-  reservedQuantity?: number;
-  ratings: Array<number>;
+// Updated Interface
+export interface IProduct extends Document {
+  objectID: string;
+  name: string;
+  image: string;
+  thumbnailImage: string;
+  description?: string;
+  shortDescription?: string;
+  manufacturer?: string;
+  price?: number;
+  salePrice: number;
+  salePrice_range?: string;
+  categories?: string[];
+  bestSellingRank?: number;
+  customerReviewCount?: number;
+  shipping?: string;
+  url?: string;
+  type?: string;
 }
 
-interface ProductModel extends mongoose.Model<ProductDoc> {
-  build(attrs: ProductAttrs): ProductDoc;
-}
-
-const ProductSchema = new mongoose.Schema(
+// Updated Schema
+const productSchema: Schema<IProduct> = new Schema(
   {
-    _id: { type: String, required: true },
-    available: { type: Boolean, default: true },
-    totalSales: { type: Number, default: 0 },
-    title: { type: String, required: true },
-    img: { type: String, required: true },
-    description: { type: String, required: true },
-    category: { type: String, index: true },
-    sizes: {
-      type: Array,
-      index: true,
-    },
-    gender: { type: String },
-    color: { type: Array },
-    price: { type: String, required: true, index: true },
-    inStock: { type: Number, default: 1 },
-    avaliableQuantity: { type: Number, required: true },
-    flashSale: {
-      active: { type: Boolean, default: false },
-      discount: { type: Number, default: 0 },
-      startDate: { type: Date, default: undefined },
-      endDate: { type: Date, default: undefined },
-    },
-    reservedQuantity: { type: Number, default: 0 },
-    ratings: {
-      type: Array,
-      default: [],
-    },
+    objectID: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    image: { type: String, required: true },
+    thumbnailImage: { type: String },
+    description: { type: String },
+    shortDescription: { type: String },
+    manufacturer: { type: String },
+    price: { type: Number },
+    salePrice: { type: Number, required: true },
+    salePrice_range: { type: String },
+    categories: { type: [String] },
+    bestSellingRank: { type: Number },
+    customerReviewCount: { type: Number },
+    shipping: { type: String },
+    url: { type: String },
+    type: { type: String },
   },
-  {
-    timestamps: true,
-    toJSON: {
-      transform(doc, ret) {
-        if (ret.__v !== undefined) {
-          delete ret.__v;
-        }
-        return ret;
-      },
-    },
-  }
+  { timestamps: true }
 );
 
-ProductSchema.statics.build = (attrs: ProductAttrs) => {
-  return new Product(attrs);
-};
+// Model
+const ProductModel: Model<IProduct> = mongoose.model<IProduct>("Product", productSchema);
 
-console.log(ProductSchema.indexes());
-
-const Product = mongoose.model<ProductDoc, ProductModel>(
-  "Product",
-  ProductSchema
-);
-
-export { Product };
+export default ProductModel;

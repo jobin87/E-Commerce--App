@@ -1,17 +1,17 @@
-import type { BoxProps } from '@mui/material/Box';
+import { Box, BoxProps, Portal } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import Box from '@mui/material/Box';
-import Portal from '@mui/material/Portal';
-
-import { AnimateLogo1 } from 'src/components/animate';
-
-// ----------------------------------------------------------------------
 
 type Props = BoxProps & {
   portal?: boolean;
+   notloading?: boolean;
 };
 
-export function SplashScreen({ portal = true, sx, ...other }: Props) {
+export function SplashScreen({ portal = true, notloading=false, sx, ...other }: Props) {
+  if(notloading){
+    console.log("notloading")
+  }
+
   const content = (
     <Box sx={{ overflow: 'hidden' }}>
       <Box
@@ -30,14 +30,10 @@ export function SplashScreen({ portal = true, sx, ...other }: Props) {
         }}
         {...other}
       >
-        <AnimateLogo1 />
+        <CircularProgress />
       </Box>
     </Box>
   );
 
-  if (portal) {
-    return <Portal>{content}</Portal>;
-  }
-
-  return content;
+  return portal ? <Portal>{content}</Portal> : content;
 }
